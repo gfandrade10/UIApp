@@ -13,6 +13,7 @@ class UIClass
     
     UIClass& operator=(const UIClass&) = delete;
     void Init(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
+    void GetInputButtons() const;
     void Run();
 
     private:

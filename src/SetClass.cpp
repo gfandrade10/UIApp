@@ -6,9 +6,9 @@
 #include <string>
 
 NumberSequence::NumberSequence(size_t input)
-: mNumOfElements(input), mSeed(mRd()) { }
+: mSeed(mRd()), mNumOfElements(input) { }
 
-std::wstring& NumberSequence::getString()
+std::string& NumberSequence::getString()
 {
     return mSeqString;
 }
@@ -27,9 +27,9 @@ void NumberSequence::genSequence()
 
 void NumberSequence::seqToString()
 {
-    std::wostringstream os;
+    std::ostringstream os;
     for (const auto& it:mSequenceSet)
-        os << it << L" ";
+        os << it << " ";
     
     auto tempString = os.str();
     tempString.pop_back();

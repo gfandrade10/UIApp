@@ -3,7 +3,9 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "UIClass.h"
+#include "SetClass.h"
 
+#include <cstddef>
 #include <iostream>
 
 void UIClass::Init(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share)
@@ -26,6 +28,55 @@ void UIClass::Init(int width, int height, const char* title, GLFWmonitor* monito
         io.Fonts->Build();
 }
 
+void UIClass::GetInputButtons() const
+{   
+    static std::string displayText; // Holds the output text
+    static bool showTextWindow = false;
+
+    size_t number = 6;
+    float buttonLength = 50.0f;
+    float buttonHeight = 50.0f;
+    float verticalSpacing = 10.0f; 
+
+    for (int row = 0; row < 2; ++row) // Two rows
+    {
+        for (int col = 0; col < 5; ++col) // Five buttons per row
+        {
+            if (ImGui::Button((std::to_string(number)).c_str(), ImVec2(buttonLength, buttonHeight)))
+            {
+                NumberSequence obj(number);
+                obj.Run();
+                displayText = obj.getString();
+                showTextWindow = true;
+            }   
+            if (col < 4)
+                ImGui::SameLine();
+            ++number; // Increment the number for the next button
+        }
+    }
+
+    if(showTextWindow)
+    {
+        float totalWidth = (5 * buttonLength + 4 * verticalSpacing) * 1.5f;
+        ImVec2 ButtonWindowSize(totalWidth, 100.0f);
+        // Set the position for the result window, below the buttons
+        ImVec2 resultWindowPos = ImVec2(ImGui::GetCursorPosX(),
+            ImGui::GetCursorPosY() + verticalSpacing
+        );
+
+        ImGui::SetNextWindowPos(resultWindowPos, ImGuiCond_Always);
+        ImGui::SetNextWindowSize(ButtonWindowSize, ImGuiCond_Always);
+        ImGui::Begin("Result", NULL, ImGuiWindowFlags_NoResize   | 
+                                     ImGuiWindowFlags_NoCollapse |
+                                     ImGuiWindowFlags_NoTitleBar |
+                                     ImGuiWindowFlags_NoInputs   |
+                                     ImGuiWindowFlags_NoMove);
+
+        ImGui::TextUnformatted(displayText.c_str()); // Display the result
+        ImGui::End();
+    }
+}
+
 void UIClass::Run()
 {
     while (!glfwWindowShouldClose(mWindow)) 
@@ -41,7 +92,9 @@ void UIClass::Run()
 
         // Set up the UI
         ImVec2 imguiWindowSize(1200.0f, 700.0f); // Set desired ImGui window size
-        ImGui::Begin("Hello, First C++ UI App", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("Hello, First C++ UI App", NULL, ImGuiWindowFlags_NoResize     | 
+                                                      ImGuiWindowFlags_NoCollapse   |
+                                                      ImGuiWindowFlags_NoBringToFrontOnFocus);
         ImGui::SetWindowSize(imguiWindowSize);
 
         // Ensure ImGui window stays within GLFW bounds
@@ -53,7 +106,9 @@ void UIClass::Run()
 
         ImGui::SetWindowPos(imguiWindowPos);
 
-        ImGui::Text("This is a cross-platform UI!");
+        ImGui::Text("Unique Numbers Generator");
+
+        GetInputButtons();
 
         // Position the button within the bounds of the ImGui window
         ImVec2 buttonSize(150.0f, 50.0f);

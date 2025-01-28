@@ -15,18 +15,17 @@ class NumberSequence
     NumberSequence& operator=(const NumberSequence) = delete;
     ~NumberSequence() = default;
 
-    std::wstring& getString();
+    std::string& getString();
     void genSequence();
     void seqToString();
     void Run();
 
     private:
-    NumberSequence();
     std::random_device mRd;
     std::mt19937 mSeed;
     size_t mNumOfElements;
     std::set<size_t> mSequenceSet;
-    std::wstring mSeqString;
+    std::string mSeqString;
 };
 
 #endif // !SETCLASS_H
