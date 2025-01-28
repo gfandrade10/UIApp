@@ -27,11 +27,12 @@ void NumberSequence::genSequence()
 
 void NumberSequence::seqToString()
 {
-    std::ostringstream os;
+    std::wostringstream os;
     for (const auto& it:mSequenceSet)
-        os << it << " ";
+        os << it << L" ";
     
     auto tempString = os.str();
+    tempString.pop_back();
     mSeqString.assign(tempString.begin(), tempString.end());
 }
 
